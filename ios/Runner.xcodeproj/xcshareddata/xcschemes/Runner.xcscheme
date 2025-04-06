@@ -42,7 +42,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "331C8080294A63A400263BE5"
+               BlueprintIdentifier = "331C80F0294D02FB00263BE5"
                BuildableName = "RunnerTests.xctest"
                BlueprintName = "RunnerTests"
                ReferencedContainer = "container:Runner.xcodeproj">
@@ -52,8 +52,8 @@
    </TestAction>
    <LaunchAction
       buildConfiguration = "Release"
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
