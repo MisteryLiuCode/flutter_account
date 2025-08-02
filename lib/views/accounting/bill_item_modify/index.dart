@@ -197,28 +197,15 @@ class _BillEditPageState extends State<BillEditPage> {
                       flex: 2,
                       child: FormBuilderDateTimePicker(
                         name: 'date',
-                        initialEntryMode: DatePickerEntryMode.calendar,
+                        initialEntryMode: DatePickerEntryMode.calendarOnly,
                         initialValue: DateTime.now(),
-                        inputType: InputType.both,
+                        inputType: InputType.date, // 只选择日期
                         decoration: const InputDecoration(
-                          // labelText: '时间',
-                          // // 取消下划线
-                          // border: InputBorder.none,
-                          // 设置透明底色
                           filled: true,
                           fillColor: Colors.transparent,
                           suffixIcon: Icon(Icons.arrow_drop_down),
-                          // // 后置图标点击清空
-                          // suffixIcon: IconButton(
-                          //   icon: Icon(Icons.close, size: 20.sp),
-                          //   onPressed: () {
-                          //     _formKey.currentState!.fields['date']
-                          //         ?.didChange(null);
-                          //   },
-                          // ),
                         ),
                         keyboardType: TextInputType.datetime,
-                        initialTime: const TimeOfDay(hour: 8, minute: 0),
                         locale: Localizations.localeOf(context),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
