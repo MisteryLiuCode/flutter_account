@@ -174,7 +174,7 @@ class _BillReportIndexState extends State<BillReportIndex>
       months.add("${current.year}-${current.month.toString().padLeft(2, '0')}");
       current = DateTime(current.year, current.month + 1);
     }
-
+    print("getMonthsBetween: $months");
     return months;
   }
 
@@ -618,6 +618,16 @@ class _BillReportIndexState extends State<BillReportIndex>
     // 不是月度，就是年度
     bool isMonth = billType == "month";
 
+    // 复制并排序数据源，避免修改原始数据
+    List<BillPeriodCount> sortedCounts = List.from(isMonth ? monthCounts : yearCounts);
+
+// 根据支出或收入点击状态进行排序
+    sortedCounts.sort((a, b) {
+      double aValue = (isMonthExpendClick || isYearExpendClick) ? a.expendTotalValue : a.incomeTotalValue;
+      double bValue = (isMonthExpendClick || isYearExpendClick) ? b.expendTotalValue : b.incomeTotalValue;
+      return aValue.compareTo(bValue); // 从小到大排序
+    });
+
     return SizedBox(
       height: 200.sp, // 图表还是绝对高度吧，如果使用相对高度不同设备显示差异挺大
       child: Column(
@@ -676,36 +686,28 @@ class _BillReportIndexState extends State<BillReportIndex>
               // 柱子图数据
               series: <CartesianSeries<BillPeriodCount, String>>[
                 ColumnSeries<BillPeriodCount, String>(
-                  dataSource: isMonth ? monthCounts : yearCounts,
+                  dataSource: sortedCounts,
                   xValueMapper: (BillPeriodCount data, _) => data.period,
                   yValueMapper: (BillPeriodCount data, _) =>
-                      (isMonth ? isMonthExpendClick : isYearExpendClick)
-                          ? data.expendTotalValue
-                          : data.incomeTotalValue,
+                  (isMonth ? isMonthExpendClick : isYearExpendClick)
+                      ? data.expendTotalValue
+                      : data.incomeTotalValue,
                   width: 0.6,
-                  // 柱的宽度
                   spacing: 0.4,
-                  // 柱之间的间隔
                   name: isMonth
                       ? (isMonthExpendClick ? '支出' : '收入')
                       : (isYearExpendClick ? '支出' : '收入'),
                   color: const Color.fromRGBO(8, 142, 255, 1),
-                  // 根据索引设置不同的颜色，高亮第三个柱子（索引为2，因为索引从0开始）
                   pointColorMapper: (BillPeriodCount value, int index) {
                     if (value.period ==
                         (isMonth ? selectedMonth : selectedYear)) {
-                      return Colors.green; // 高亮颜色
+                      return Colors.green;
                     } else {
-                      return Colors.black12; // 其他柱子的颜色
+                      return Colors.black12;
                     }
                   },
-                  // 数据标签的配置(默认不显示)
                   dataLabelSettings: DataLabelSettings(
-                    // 显示数据标签
                     isVisible: true,
-                    // 数据标签的位置
-                    // labelAlignment: ChartDataLabelAlignment.bottom,
-                    // 格式化标签组件（可以换成图标等其他部件）
                     builder: (dynamic data, dynamic point, dynamic series,
                         int pointIndex, int seriesIndex) {
                       var d = (data as BillPeriodCount);
@@ -717,10 +719,6 @@ class _BillReportIndexState extends State<BillReportIndex>
                       );
                     },
                   ),
-                  // 格式化标签文字字符串
-                  // dataLabelMapper: (datum, index) {
-                  //   return "￥${datum.expendTotalValue}";
-                  // },
                 )
               ],
             ),
@@ -729,6 +727,8 @@ class _BillReportIndexState extends State<BillReportIndex>
       ),
     );
   }
+
+
 
   buildPieChart(String billType) {
     // 不是月度，就是年度
