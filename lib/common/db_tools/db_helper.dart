@@ -133,6 +133,8 @@ class DBHelper {
     List<String> accounts = listData
         .map((e) {
           String account = e['account'];
+          // 处理account数据，保留最后一个:的数据，比如Expenses:Eat:其他，保留最好一个冒号右边的 数据
+          account = account.split(":").last;
           return account;
         })
         .where((account) =>
