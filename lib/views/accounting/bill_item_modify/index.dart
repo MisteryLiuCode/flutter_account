@@ -47,6 +47,8 @@ class _BillEditPageState extends State<BillEditPage> {
   // 这些选项都是FormBuilderChipOption类型
   String selectedCategoryType = "支出";
   List<String> categoryList = [];
+  // 存储页面展示和保存的分类；eg: "日常吃饭" : "Expenses:Eat:日常吃饭"
+  Map<String, String> categoryMap = {};
   var incomeCategoryList = [
     // 收入
     "工资", "奖金", "生意", "摆摊", "红包", "转账",
@@ -83,9 +85,10 @@ class _BillEditPageState extends State<BillEditPage> {
   }
 
   queryAccount() async {
-    var queryAccountList = await _dbHelper.queryAccountList();
+    var accountMap = await _dbHelper.queryAccountList();
     setState(() {
-      categoryList = queryAccountList;
+      categoryMap = accountMap;
+      categoryList = accountMap.keys.toList();
     });
   }
 
@@ -115,7 +118,7 @@ class _BillEditPageState extends State<BillEditPage> {
         desc: temp['item'],
         entries: [
           Entries(
-            account: temp['category'],
+            account: categoryMap[temp['category']].toString(),
             number: double.tryParse(temp['value']) ?? 0,
             currency: "CNY",
           ),

@@ -9,7 +9,6 @@ import '../../models/brief_accounting_state.dart';
 import '../constants.dart';
 
 class DBHelper {
-
   // api删除单条
   Future<bool> deleteBillItemByIdApi(String transactionId) async {
     try {
@@ -41,6 +40,7 @@ class DBHelper {
       print('执行完毕');
     }
   }
+
   Future<CusDataResult> queryBillItemListApi(
       String? selectedMonth, String? category) async {
     String year = "";
@@ -51,13 +51,8 @@ class DBHelper {
       month = split[1];
     }
 
-    Response response = await dio.get(
-        TRANSACTION_LIST_URL,
-        queryParameters: {
-          "year": year,
-          "month": month,
-          "type": category
-        });
+    Response response = await dio.get(TRANSACTION_LIST_URL,
+        queryParameters: {"year": year, "month": month, "type": category});
     print("api请求交易列表结果：");
     print(response);
 // 转换为 List<BillItem>，并过滤掉 number < 0 的项
@@ -80,8 +75,7 @@ class DBHelper {
       maxDate: DateTime.now(),
     );
 
-    Response response =
-        await dio.get(MONTH_LIST_URL);
+    Response response = await dio.get(MONTH_LIST_URL);
     print("api请求月份列表结果：");
     print(response);
     if (response.statusCode == 200) {
@@ -112,9 +106,8 @@ class DBHelper {
   // api查询月度/年度统计数据
   Future<BillPeriodCount> queryBillCountListApi(String selectedMonth) async {
     var split = selectedMonth.split("-");
-    Response response = await dio.get(
-        STATS_URL,
-        queryParameters: {"year": split[0], "month": split[1]});
+    Response response = await dio
+        .get(STATS_URL, queryParameters: {"year": split[0], "month": split[1]});
     print("api请求月度/年度消费统计结果：");
     print(response.data);
     return BillPeriodCount.fromMap(response.data['data'], split);
@@ -124,23 +117,32 @@ class DBHelper {
    * 查询所有账户(分类)
    * eg:"account": "Expenses:Eat:日常吃饭",
    */
-  Future<List<String>> queryAccountList() async {
-    Response response =
-        await dio.get(CATEGORY_LIST_URL);
+  Future<Map<String, String>> queryAccountList() async {
+    Map<String, String> accountsMap = {};
+    Response response = await dio.get(CATEGORY_LIST_URL);
     print("api请求账户(分类)结果：");
     print(response.data);
     var listData = response.data["data"] as List;
-    List<String> accounts = listData
-        .map((e) {
-          String account = e['account'];
-          // 处理account数据，保留最后一个:的数据，比如Expenses:Eat:其他，保留最好一个冒号右边的 数据
-          account = account.split(":").last;
-          return account;
-        })
-        .where((account) =>
-            account.isNotEmpty && "\"\"" != account && "CNY" != account)
-        .toList();
-    return accounts;
+    // 过滤不展示的account
+    var filteredList = listData.where((e) {
+      String? account = e['account'];
+      return account != null &&
+          account.isNotEmpty &&
+          account != "\"\"" &&
+          account != "CNY" &&
+          account != "Assets:Account" &&
+          account != "Equity:OpenBalance" &&
+          account != "Income:Investment" &&
+          account != "Income:Other" &&
+          account != "Income:Salary";
+    }).toList();
+
+    for (var e in filteredList) {
+      String account = e['account'];
+      String accountView = account.split(":").last;
+      accountsMap[accountView] = account;
+    }
+    return accountsMap;
   }
 
   /**
@@ -149,10 +151,7 @@ class DBHelper {
   saveBillItemApi(SaveBillItem tempItem) {
     print("api请求保存账单记录：");
     print(tempItem.toJson());
-    dio
-        .post(TRANSACTION_SAVE_URL,
-            data: jsonEncode(tempItem))
-        .then((response) {
+    dio.post(TRANSACTION_SAVE_URL, data: jsonEncode(tempItem)).then((response) {
       print("api请求保存账单记录结果：");
       print(response.data);
     }).catchError((error) {
