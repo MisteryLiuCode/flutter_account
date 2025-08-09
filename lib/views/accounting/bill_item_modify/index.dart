@@ -272,30 +272,34 @@ class _BillEditPageState extends State<BillEditPage> {
                 FormBuilderChoiceChip<String>(
                   decoration: const InputDecoration(
                     labelText: '分类',
-                    // 设置透明底色
                     filled: true,
                     fillColor: Colors.transparent,
+                    labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   name: 'category',
-                  // initialValue: initType(),
-                  // initialValue: categoryList[0],
-                  // 可让选项居中
                   alignment: WrapAlignment.center,
-                  // 选项标签的一些大小修改配置
-                  labelStyle: TextStyle(fontSize: 10.sp),
-                  labelPadding: EdgeInsets.all(1.sp),
-                  elevation: 5,
-                  // padding: EdgeInsets.all(0.sp),
-                  // 标签之间垂直的间隔
-                  // runSpacing: 10.sp,
-                  // 标签之间水平的间隔
-                  // spacing: 10.sp,
+                  labelStyle: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.grey[800],
+                    fontWeight: FontWeight.w500,
+                  ),
+                  labelPadding: EdgeInsets.symmetric(horizontal: 10.sp, vertical: 6.sp),
+                  elevation: 3,
+                  spacing: 8, // 横向间距
+                  runSpacing: 8, // 纵向间距
                   options: _categoryChipOptions(),
+                  selectedColor: Colors.blue.shade100, // 选中背景色
+                  selectedShadowColor: Colors.blue.shade300, // 选中阴影
+                  backgroundColor: Colors.grey.shade100, // 默认背景色
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20), // 圆角
+                    side: BorderSide(color: Colors.grey.shade300),
+                  ),
                   onChanged: _onChanged,
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(),
                   ]),
-                ),
+                )
               ],
             ),
           ),
