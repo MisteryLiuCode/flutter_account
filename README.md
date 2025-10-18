@@ -15,7 +15,7 @@ V(base64)：bWlzdGVyeV9saXU=
 
 下面是我个人真实用的截图
 
-<img src="https://misteryliu.oss-cn-beijing.aliyuncs.com/misteryliuD476CC57-43A2-4FA0-952D-D567D1872193_1_102_o.jpeg" alt="D476CC57-43A2-4FA0-952D-D567D1872193_1_102_o" style="zoom: 25%;" />
+<img src="https://misteryliu.oss-cn-beijing.aliyuncs.com/misteryliuD476CC57-43A2-4FA0-952D-D567D1872193_1_102_o.jpeg" alt="D476CC57-43A2-4FA0-952D-D567D1872193_1_102_o" width=25%; />
 
 <img src="https://misteryliu.oss-cn-beijing.aliyuncs.com/misteryliu557CBFFC-643D-4478-9157-67077A9EC601_1_102_o.jpeg" alt="557CBFFC-643D-4478-9157-67077A9EC601_1_102_o" style="zoom: 25%;" />
 
